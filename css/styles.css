@@ -854,6 +854,25 @@ footer {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 209, 102, 0.4);
 }
 
+/* Ajustes móviles para el botón flotante: evitar halo/espacio negro */
+@media (max-width: 640px) {
+  #loan-btn {
+    width: 64px;
+    height: 64px;
+    background: transparent; /* quitar fondo negro para evitar halo en móviles */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35),
+      0 0 0 2px rgba(182, 140, 47, 0.28);
+  }
+  #loan-btn img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    /* un pequeño inset para evitar recortes por subpíxeles */
+    transform: translate(-50%, -50%) scale(0.985);
+  }
+}
+
 /* Embedded calculator styling */
 .lhp-calculator-embedded {
   height: 1100px;
@@ -872,6 +891,7 @@ footer {
   position: relative; /* Para pseudo-elemento del borde interno */
   overscroll-behavior-x: none; /* No arrastre lateral */
   touch-action: pan-y; /* Solo vertical */
+  /* iOS smooth scroll deprecated; relying on native scrolling */
 }
 .lhp-calculator-embedded::after {
   content: "";
@@ -974,7 +994,7 @@ footer {
 #lhp-calculator {
   display: none; /* hidden by default, toggled via JS */
   position: fixed;
-  inset: 1vh 8vw;
+  inset: 2vh 2vw; /* más espacio útil en pantalla completa */
   z-index: 2002;
   background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%);
   border-radius: 16px;
@@ -1036,6 +1056,7 @@ footer {
   border-radius: 16px;
   overscroll-behavior-x: none;
   touch-action: pan-y;
+  /* iOS smooth scroll deprecated; relying on native scrolling */
 }
 
 /* En móvil, ajustar el contenido cuando el header está visible */
@@ -1067,6 +1088,7 @@ footer {
   padding: 12px 8px; /* Espacio equilibrado */
   overscroll-behavior-x: none;
   touch-action: pan-y;
+  /* iOS smooth scroll deprecated; relying on native scrolling */
 }
 
 #lhp-calculator-content iframe {
@@ -1082,7 +1104,7 @@ footer {
 @media (min-width: 992px) {
   #lhp-calculator-content {
     height: 100%;
-    overflow: hidden; /* Evitar scroll interno en desktop */
+    overflow: auto; /* permitir scroll si el contenido es más alto */
     display: flex;
     align-items: flex-start; /* Anclar arriba en desktop */
     justify-content: center;
@@ -1092,8 +1114,8 @@ footer {
 
   #lhp-calculator-content iframe {
     /* Ajusta dinámicamente para encajar en la ventana sin recortar */
-    height: calc(100vh - 8vh); /* margen para bordes y padding */
-    max-height: 1500px; /* límite superior razonable */
+    height: calc(100vh - 160px); /* compensa header/padding/bordes */
+    max-height: none; /* sin límite superior para pantalla completa */
     transform: none;
     transform-origin: center top;
   }
@@ -1111,6 +1133,16 @@ footer {
 }
 
 .calculator-loading {
+  /* Reducir altura del iframe en móviles para evitar atascos y jank */
+  @media (max-width: 640px) {
+    .lhp-calculator-embedded {
+      height: 900px;
+      padding-top: 10px;
+    }
+    .lhp-calculator-embedded iframe {
+      height: 900px;
+    }
+  }
   text-align: center;
   padding: 60px 20px;
   color: #6b7785;
